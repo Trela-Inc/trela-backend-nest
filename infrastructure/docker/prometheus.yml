@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Example: scrape a NestJS service metrics endpoint
+  - job_name: 'gateway-api'
+    static_configs:
+      - targets: ['gateway-api:3000']
+
+  - job_name: 'auth-service'
+    static_configs:
+      - targets: ['auth-service:3000']
+
+  # Add more jobs for other services as needed 

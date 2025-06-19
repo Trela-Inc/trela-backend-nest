@@ -8,6 +8,7 @@ import { KafkaProducerService } from '../kafka/kafka-producer.service';
 import { UserRole } from '../enums/user.enum';
 import * as crypto from 'crypto';
 
+// AuthService now includes logic for validating OAuth logins (e.g., Google)
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
@@ -296,5 +297,12 @@ export class AuthService {
   private sanitizeUser(user: User): any {
     const { password, refreshToken, refreshTokenExpiresAt, ...sanitizedUser } = user;
     return sanitizedUser;
+  }
+
+  async validateOAuthLogin(profile: any, provider: string): Promise<any> {
+    // TODO: Implement user lookup/creation logic here for OAuth logins
+    // You should find or create a user based on the profile info
+    // Optionally, issue a JWT and return it along with user info
+    return { oauthProfile: profile, provider };
   }
 } 

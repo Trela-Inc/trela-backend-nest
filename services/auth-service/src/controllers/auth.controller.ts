@@ -7,6 +7,7 @@ import {
   HttpCode,
   HttpStatus,
   Get,
+  Req,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -16,7 +17,9 @@ import {
 } from '@nestjs/swagger';
 import { AuthService } from '../services/auth.service';
 import { LoginDto, SignupDto, RefreshTokenDto } from '../dto/auth.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+// AuthController now includes endpoints for Google OAuth authentication
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
@@ -76,5 +79,23 @@ export class AuthController {
   @ApiResponse({ status: 400, description: 'Invalid token' })
   async verifyEmail(@Body('token') token: string) {
     return this.authService.verifyEmail(token);
+  }
+
+  @Get('google')
+  @ApiOperation({ summary: 'Initiate Google OAuth2 login' })
+  @ApiResponse({ status: 302, description: 'Redirects to Google OAuth2 login' })
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req) {
+    // Initiates the Google OAuth2 login flow
+  }
+
+  @Get('google/callback')
+  @ApiOperation({ summary: 'Google OAuth2 callback' })
+  @ApiResponse({ status: 200, description: 'Handles Google OAuth2 callback and returns user info' })
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req) {
+    // Handles the Google OAuth2 callback
+    // req.user will contain the user info from the Google strategy
+    return req.user;
   }
 } 
